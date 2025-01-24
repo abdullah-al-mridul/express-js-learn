@@ -13,12 +13,17 @@ const todoSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-todoSchema.methods = {
-  findActive: async function () {
-    return await mongoose.model("Todo").find({ status: "inactive" });
-  },
-};
+// todoSchema.methods = {
+//   findActive: async function () {
+//     return await mongoose.model("Todo").find({ status: "inactive" });
+//   },
+// };
 
 module.exports = todoSchema;
