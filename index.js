@@ -1,19 +1,29 @@
 const express = require("express");
 const app = express();
+const port = 3000;
+const mongoose = require("mongoose");
+const todoHandler = require("./routes/todoHandler");
+//database connection
+mongoose
+  .connect("mongodb://localhost:27017/todos")
+  .then(() => {
+    console.log("database connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(express.json());
 
-app.get("/user/:id", (req, res) => {
-  console.log(req.params);
-  console.log(req.query.age);
-  res.send(`this is ${req.params.id} page`);
+app.use("/todos", todoHandler);
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).json({ error: err.message });
 });
 
-app.post("/user", (req, res) => {
-  console.log(req.body);
-  res.send("this is post request");
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(port, () => {
+  console.log(`server is running on port ${port}`);
 });
